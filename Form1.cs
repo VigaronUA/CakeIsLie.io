@@ -10,13 +10,25 @@ namespace PanSurvival
     {
         Graphics graphics;
         int x = 0;
-        int y = 5;
+        int y = 0;
+        int sizeH = 0;
+        int sizeW=0;
+        Random randomGod;
+        
         public Form1()
         {
             InitializeComponent();
+
             this.StartPosition = FormStartPosition.CenterScreen;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            randomGod = new Random();
+            timer1.Interval = 10;
+
+            //начальная позиция по высоте/ширине для зоны
+            x = randomGod.Next(0, this.Width);
+            y = randomGod.Next(0,this.Height);
+
 
             this.WindowState = FormWindowState.Maximized;
 
@@ -64,32 +76,29 @@ namespace PanSurvival
 
         }
 
-        private void drawZone(int size,int naPalkeGavno)
-        {
-            Rectangle rectangle = new Rectangle(x, y, size, naPalkeGavno);
+       
           
-            Pen drawingPen = null;
-            //1450, 820
 
-            drawingPen = new Pen(Color.Blue, 3);
-            Thread.Sleep(10);
+         void timer1_Tick(object sender, EventArgs e)
+        {   
+            //если начальная позиция по высоте больше 0 - тогда отнимаем 1 от позиции двигая зону вверх
+            //и сдвигаем 1 пиксель вправо ширины
+            if(x > 0) {x--;  sizeH ++;}
+
+            //так же и по ширине
+            if(y > 0){ y--; sizeW ++;}
+
+
+            //в любом случае отрисовываем справа еще 1 пиксель
+            sizeW ++;
+            //так же внизу
+            sizeH ++;
+            
+            Rectangle rectangle = new Rectangle(x, y, sizeH, sizeW);
+            Pen drawingPen = drawingPen = new Pen(Color.Blue, 1);
             graphics.DrawRectangle(drawingPen, rectangle);
-
-            if (size == 600 && naPalkeGavno == 600) timer1.Enabled = false;
+            //если дошли донизу и до низу - остановка таймера (все умерли)
+            if (sizeH == this.Height && sizeW == this.Width) timer1.Enabled = false;
         }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            for (int i = 0, j = 0; ; i ++, j ++)
-            {
-                drawZone(i, j);
-               
-        
-            }
-            // drawZone(200);
-        }
-        // Рисование границы прямоугольника.
-
-
     }
 }
