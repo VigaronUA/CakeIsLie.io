@@ -13,7 +13,11 @@ namespace PanSurvival
         int y = 0;
         int sizeH = 0;
         int sizeW=0;
+
+        int fieldSizeH = 50;
+        int fieldSizeW = 50;
         Random randomGod;
+        const int texturSize = 35;
         
         public Form1()
         {
@@ -23,7 +27,7 @@ namespace PanSurvival
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             randomGod = new Random();
-            timer1.Interval = 10;
+            //timer1.Interval = 10;
 
             //начальная позиция по высоте/ширине для зоны
             x = randomGod.Next(0, this.Width);
@@ -31,6 +35,7 @@ namespace PanSurvival
 
 
             this.WindowState = FormWindowState.Maximized;
+            this.FormBorderStyle = FormBorderStyle.None;
 
             this.MaximumSize = this.MinimumSize = new Size(SystemInformation.VirtualScreen.Width + 15, SystemInformation.VirtualScreen.Height + 15);
             this.VScroll = true;
@@ -39,34 +44,40 @@ namespace PanSurvival
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            timer1.Enabled = true;
+            //timer1.Enabled = true;
         }
 
         private void PaintZone()
         {
 
         }
+        private void keyDownListener(object sender, KeyEventArgs e){
+            MessageBox.Show(e.KeyData.ToString());
+}
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
+            GC.Collect();
             if (graphics == null)
                 graphics = this.CreateGraphics();
             // Градиентное закрашивание прямоугольника
             //LinearGradientBrush drawingBrush = new LinearGradientBrush(rectangle, Color.Blue, Color.Gold, 45);
             //e.Graphics.FillRectangle(drawingBrush, rectangle);
             // MessageBox.Show((this.Width / 45).ToString());
-            for (int i = 0; i < this.Width / 45; i++)
+            for (int i = 0; i < this.Width / texturSize+1; i++)
             {
-                for (int j = 0; j < this.Height / 45; j++)
+                for (int j = 0; j < this.Height / texturSize+1; j++)
                 {
-                    graphics.DrawImage(Image.FromFile("Grass_1.png"), i * 45, j * 45);
-                    graphics.DrawString(i + " " + j, new Font("Calibri", 8), Brushes.Red, (i * 45) + 10, (j * 45) + 10);
+                    graphics.DrawImage(Image.FromFile(i == 0 ?  "WayVertical.png" : "Grass_777.png"), i * texturSize, j * texturSize);
+                    graphics.DrawString(i + " " + j, new Font("Calibri", 8), Brushes.Red, (i * texturSize) + 1, (j * texturSize) + 1);
                 }
                 
                 // e.Graphics.Flush();
 
             }
-            timer1.Enabled = true;
+            graphics.DrawImage(Image.FromFile("Man.png"),2 * texturSize,3*texturSize);
+            //timer1.Enabled = true;
+            //paintRoad();
         }
 
         private void Form1_SizeChanged(object sender, EventArgs e)
@@ -78,7 +89,7 @@ namespace PanSurvival
 
        
           
-
+       
          void timer1_Tick(object sender, EventArgs e)
         {   
             //если начальная позиция по высоте больше 0 - тогда отнимаем 1 от позиции двигая зону вверх
@@ -100,5 +111,11 @@ namespace PanSurvival
             //если дошли донизу и до низу - остановка таймера (все умерли)
             if (sizeH == this.Height && sizeW == this.Width) timer1.Enabled = false;
         }
+        public void paintRoad()
+            {
+            for(int i = 0;i<this.Width/texturSize;i++)
+                graphics.DrawImage(Image.FromFile("WayHorizontal.png"),i * 45,i * 45);
+            }
+
     }
 }
